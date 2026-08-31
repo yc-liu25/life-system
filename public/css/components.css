@@ -755,6 +755,14 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 高亮区域点击放行层：允许用户与高亮元素真实交互 */
+.tut-clickable {
+  position: absolute;
+  border-radius: 12px;
+  cursor: pointer;
+  z-index: 1;
+}
+
 .tut-card {
   position: absolute;
   width: 340px;
@@ -865,5 +873,18 @@
 }
 
 .tutorial-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-light);
+  padding: 7px 16px;
+  border-radius: 999px;
   font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tutorial-btn:hover {
+  color: var(--primary-deep);
+  border-color: var(--primary);
+  background: rgba(107, 158, 78, 0.08);
 }

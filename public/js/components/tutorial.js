@@ -2,7 +2,7 @@
  * 新手教程组件：分步高亮引导，首次进入自动触发，可随时跳过。
  *
  * 结构：
- * - 步骤定义在 TUTORIAL_STEPS（每步含定位选择器、标题、正文、放置方向）
+ * - 步骤定义在 TUTORIAL_STEPS（每步含定位选择器、标题、正文；selector 为 null 时居中显示）
  * - DOM 上一套三层：遮罩层(挖洞) + 高亮框 + 卡片
  * - 进度用 localStorage 键 `tutorial_done` 持久化
  * - 顶栏「新手教程」按钮可随时重走
@@ -31,18 +31,20 @@ const TUTORIAL_STEPS = [
   {
     selector: '[data-page="chat"]',
     title: '💬 六六（AI陪伴）',
-    body: '系统人格六六读得懂你的面板数据。在面板打卡后切到聊天页，她会主动来吐槽或祝贺；你也能问进度、聊情绪。打卡的正反馈，多一个声音帮你放大。',
+    body: '系统人格六六住在这个页面里。她读得懂你的面板数据：在面板打卡后切过去，她会主动来吐槽或祝贺；你也能问她进度、跟她聊情绪。想现在就去看看？直接点高亮的「六六」按钮。',
+    clickable: true,
   },
   {
     selector: '#egg-btn',
     title: '🎁 彩蛋通道（随缘增分）',
-    body: '清单之外的即兴好事，可以汇报给六六。她"看心情"给奖：额外EXP或稀有勋章。每天限2次、有冷却——刻意稀缺，才不会被滥用成第二个刷分入口。',
+    body: '聊天输入框旁的 🎁 就是彩蛋通道：清单之外的即兴好事，可以汇报给六六。她"看心情"给奖——额外EXP或稀有勋章。每天限2次、有冷却，刻意稀缺才不会被滥用。',
+    note: '现在正在聊天页，🎁 在输入框左侧。',
   },
   {
-    selector: '.attribute-card--warning, .attribute-card--danger',
+    selector: null, // 衰减状态依实际使用情况出现，固定用居中说明卡
     title: '⚠ 属性衰减（减分机制）',
-    body: '任何属性超过72小时没人维护就开始掉EXP，卡片会亮起警告，六六也会切换成机械冷酷腔。但放心：等级永不掉落、EXP永不归零——紧迫感，不绝望。',
-    fallback: '衰减是隐形的——只有真的72小时没打卡才会出现。现在看看这张示意图就好。',
+    body: '系统也有"负反馈"：任何属性超过72小时没人维护就开始掉EXP——届时卡片会亮红色警告，六六会切换成机械冷酷腔。但放心：等级永不掉落、EXP永不归零。紧迫感，不绝望。',
+    note: '（此提示只在真正发生衰减时出现在属性卡上）',
   },
   {
     selector: '.topbar-nav',
@@ -77,6 +79,7 @@ export function startTutorial() {
       </svg>
     </div>
     <div class="tut-highlight" style="display:none"></div>
+    <div class="tut-clickable" style="display:none"></div>
     <div class="tut-card" style="display:none">
       <div class="tut-card-head">
         <span class="tut-step-index"></span>
@@ -102,6 +105,7 @@ export function startTutorial() {
     svg: root.querySelector('.tut-svg'),
     mask: root.querySelector('.tut-mask'),
     highlight: root.querySelector('.tut-highlight'),
+    clickable: root.querySelector('.tut-clickable'),
     card: root.querySelector('.tut-card'),
     index: root.querySelector('.tut-step-index'),
     title: root.querySelector('.tut-title'),
@@ -157,11 +161,23 @@ export function startTutorial() {
       els.highlight.style.width = `${r.width + pad * 2}px`;
       els.highlight.style.height = `${r.height + pad * 2}px`;
 
+      // 允许点击高亮区域内的真实元素（如导航按钮、交互入口）
+      if (step.clickable) {
+        els.clickable.style.display = 'block';
+        els.clickable.style.left = els.highlight.style.left;
+        els.clickable.style.top = els.highlight.style.top;
+        els.clickable.style.width = els.highlight.style.width;
+        els.clickable.style.height = els.highlight.style.height;
+      } else {
+        els.clickable.style.display = 'none';
+      }
+
       positionCard(r, pad);
     } else {
       // 无目标：居中卡片 + 全暗遮罩
       els.mask.setAttribute('d', `M0,0 H${window.innerWidth} V${window.innerHeight} H0 Z`);
       els.highlight.style.display = 'none';
+      els.clickable.style.display = 'none';
       els.card.style.left = '50%';
       els.card.style.top = '50%';
       els.card.style.transform = 'translate(-50%, -50%)';
@@ -230,7 +246,8 @@ export function initTutorialButton() {
   if (!btn) {
     btn = document.createElement('button');
     btn.id = 'tutorial-btn';
-    btn.className = 'nav-btn tutorial-btn';
+    // 注意：不能加 nav-btn 类——router 会给所有 .nav-btn 绑定页面切换
+    btn.className = 'tutorial-btn';
     btn.textContent = '🎓 新手教程';
     document.querySelector('.topbar-nav')?.appendChild(btn);
   }
