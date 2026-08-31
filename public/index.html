@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>如果人生有系统</title>
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/chat.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 顶栏：应用名 + 导航 -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="topbar-logo">⚡</span>
+        <div class="topbar-titles">
+          <span class="topbar-title" id="app-title">如果人生有系统</span>
+          <span class="topbar-subtitle">叮——检测到宿主</span>
+        </div>
+      </div>
+      <nav class="topbar-nav" id="main-nav" aria-label="主导航">
+        <button class="nav-btn is-active" data-page="panel">面板</button>
+        <button class="nav-btn" data-page="chat">六六</button>
+      </nav>
+    </header>
+
+    <!-- 主内容区：各页面由 JS 按需挂载 -->
+    <main class="main" id="main"></main>
+
+    <!-- 底部状态条：显示后端连接状态 -->
+    <footer class="statusbar">
+      <span id="status-connection" class="status-dot status-dot--unknown"></span>
+      <span id="status-text">正在连接系统…</span>
+    </footer>
+  </div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

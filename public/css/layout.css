@@ -1,0 +1,100 @@
+/* ============================================
+   layout.css —— 应用骨架布局（顶栏/主区/状态条）
+   ============================================ */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.topbar-logo {
+  font-size: 1.4rem;
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-light);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  color: var(--primary-deep);
+  background: rgba(107, 158, 78, 0.08);
+}
+
+.nav-btn.is-active {
+  color: #fff;
+  background: var(--primary);
+  font-weight: 600;
+}
+
+/* ---------- 主内容区 ---------- */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+}
+
+/* ---------- 底部状态条 ---------- */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot--ok { background: var(--primary); }
+.status-dot--bad { background: #E53E3E; }
+.status-dot--unknown { background: var(--text-light); }
+
+@media (max-width: 640px) {
+  .topbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
