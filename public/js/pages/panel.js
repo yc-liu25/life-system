@@ -55,6 +55,9 @@ async function loadPanel() {
     renderMedals(panel.medals);
     renderTimeline(panel.timeline);
 
+    // 面板渲染完毕，广播事件（新手教程等此信号再启动，避免定位落空）
+    store.set('panelRendered', Date.now());
+
     // 衰减警告：极简机械腔，逐条弹出（与六六的呆萌腔形成反差）
     if (panel.decayEvents?.length) {
       panel.decayEvents.forEach((ev, i) => {

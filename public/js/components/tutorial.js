@@ -174,7 +174,7 @@ export function startTutorial() {
 
       positionCard(r, pad);
     } else {
-      // 无目标：居中卡片 + 全暗遮罩
+      // 无目标：居中卡片 + 全暗遮罩（点击蒙层可退出）
       els.mask.setAttribute('d', `M0,0 H${window.innerWidth} V${window.innerHeight} H0 Z`);
       els.highlight.style.display = 'none';
       els.clickable.style.display = 'none';
@@ -182,6 +182,9 @@ export function startTutorial() {
       els.card.style.top = '50%';
       els.card.style.transform = 'translate(-50%, -50%)';
     }
+
+    // 无论哪种模式，操作卡片必须可见（这是用户唯一可靠的"出口"）
+    els.card.style.display = 'block';
 
     if (step.fallback && !target) {
       els.note.style.display = 'block';
@@ -224,6 +227,8 @@ export function startTutorial() {
     if (current > 0) renderStep(current - 1);
   });
   els.skipBtn.addEventListener('click', cleanup);
+  // 点击遮罩空白处 = 跳过全部（常见交互直觉，避免"蒙层关不掉"的困惑）
+  root.querySelector('.tut-overlay').addEventListener('click', cleanup);
   document.addEventListener('keydown', function onKey(e) {
     if (!document.getElementById('tutorial-root')) {
       document.removeEventListener('keydown', onKey);

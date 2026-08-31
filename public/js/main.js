@@ -28,9 +28,17 @@ async function boot() {
     setConnection(false, `后端连接失败：${err.message}`);
   }
 
-  // 首次进入：等面板渲染完成后自动开始新手教程
+  // 首次进入：等面板数据真正渲染完成后再启动教程（监听 panelRendered 事件）
   if (!isTutorialDone()) {
-    setTimeout(() => startTutorial(), 900);
+    // 兜底：若 8 秒内面板未渲染完成（网络异常等），不再自动弹出
+    let started = false;
+    const unsub = store.subscribe('panelRendered', () => {
+      if (started) return;
+      started = true;
+      unsub();
+      setTimeout(() => startTutorial(), 400); // 略等动画结束，定位更稳
+    });
+    setTimeout(() => { if (!started) unsub(); }, 8000);
   }
 }
 
